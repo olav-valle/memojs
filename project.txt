@@ -1,0 +1,17 @@
+Ideas and/or goals
+
+Browser JS
+    More mobile friendly functionality:
+        tap item to mark as done
+
+    implement item text editing (long-press on mobile?)
+
+Implement a backend
+    serve up memo items stored in a DB as JSON files
+    receive new memos created in browser and store in DB
+
+Rewrite CSS/layout
+    Post-it note inspired.
+    Each memo item is a "card".
+
+
