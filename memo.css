@@ -25,23 +25,33 @@ header {
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.entryButton {
+    border-radius: 5px;
+    height: 4ex;
 }
 
 /* Textbox */
-#todoInput {
-    flex-grow: 1;
-    /*font-size: 5vmin;*/
-}
+/*#todoInput {*/
+/*    flex-grow: 1;*/
+/*    !*font-size: 5vmin;*!*/
+/*}*/
 
 /* Confirmation button */
 #confirmEntry {
     border: 0;
-    background: transparent;
+    background: #0f9d58;
+
+
 
 }
 
-#confirmEntry:hover {
-    color: #0f9d58;
+
+#deleteDone {
+    border: 0;
+    background-color: tomato;
 }
 
 /*Flex box of item cards*/
@@ -69,16 +79,15 @@ main {
 
 }
 
+.done {
+}
+
 .done > .itemText{
+    filter: blur(1px);
     text-decoration: line-through;
     color: #aaaaaaaa;
 }
-@media all and (hover) {
-    .card:hover {
-        width: 101%;
-        box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
-    }
-}
+
 
 .priStar {
     background: transparent;
@@ -111,9 +120,7 @@ main {
     width: 100%;
     font-size: inherit;
 }
-.priButton:hover {
-    filter: brightness(90%);
-}
+
 .priTop{
     background-color: tomato;
 }
@@ -134,9 +141,6 @@ main {
     border: 0;
     color: #5d6164;
 }
-.delete:hover {
-    color: #f24236;
-}
 
 /* Checkbox marking card item as "done" */
 .check {
@@ -148,18 +152,30 @@ main {
 .itemText {
     flex-grow: 1;
 }
+/* --- Hover only enabled on devices that support it --- */
+@media all and (hover) {
 
-@media all and (min-width: 600px) {
+    #confirmEntry:hover {
+        color: whitesmoke;
+    }
+
+    .card:hover {
+        width: 101%;
+        box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
+    }
+
+    .delete:hover {
+        color: #f24236;
+    }
+
+    .priButton:hover {
+        filter: brightness(90%);
+    }
 
 }
 
+/* --- palceholder for mobile media rules --- */
+@media all and (min-width: 600px) {
+}
 @media all and (min-width: 1200px) {
-    /*#list {*/
-    /*    flex: 3 0;*/
-    /*    order: 2;*/
-    /*}*/
-
-    /*body > * {*/
-    /*    font-size: large;*/
-    /*}*/
 }
