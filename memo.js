@@ -2,9 +2,13 @@ var list;
 var input;
 
 // Item card HTML
-const card = "<input class=\"check\" type=\"checkbox\">\n" +
-    "<span class=\"itemText\"></span>\n" +
-    "<button class=\"delete zmdi zmdi-delete\"></button>\n";
+const card =
+    "        <div class=\"card\">\n" +
+    "            <input class=\"check\" type=\"checkbox\">\n" +
+    "            <span class=\"itemText\"></span>\n" +
+    "            <button class=\"priStar zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
+    "            <button class=\"delete zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
+    "        </div>"
 
 const priMenu =
     "<div id=\"priDropdown\">\n" +
@@ -13,19 +17,21 @@ const priMenu =
     "        <button class=\"priButton priTop\">Top</button>\n" +
     "        <button class=\"priButton priMid\">Normal</button>\n" +
     "        <button class=\"priButton priLow\">Low</button>\n" +
+    "        <button class=\"priButton priNo\">Remove</button>\n" +
     "    </div>\n" +
     "</div>"
 
 
 function addItem() {
     if (input.value !== "") {
-        let newCard = document.createElement("div");
-        newCard.setAttribute("class", "card");
-        newCard.innerHTML = card;
-        newCard.getElementsByClassName("itemText").item(0).innerHTML = input.value;
+        let newCard = $(card).appendTo("#list");
+        $(newCard).children(".itemText").html(input.value);
+        //set button reactions
         $(newCard).children(".delete").click(deleteItem);
         $(newCard).children(".check").change(checkDoneEvent)
-        list.appendChild(newCard); //todo add blip effect to card being added
+        $(newCard).children(".priStar").click(showPriMenu)
+
+        // list.appendChild(newCard); //todo add blip effect to card being added
         input.value = "";
     } else {
         //todo error notif. Button shake and color red, with text bubble?
@@ -45,6 +51,7 @@ function checkDoneEvent() {
 }
 
 function setDoneClass() {
+    //fixme this sets class on buttons as well as text
     if ($(this).is(":checked")) {
         // $(this).siblings(".itemText").addClass("done");
         $(this).parent(".card").addClass("done");
@@ -56,37 +63,38 @@ function setDoneClass() {
 }
 
 function showPriMenu() {
+    $("#priDropdown").remove();
     // the menu div
+    $(this).append(priMenu);
     let div = $("#priDropdown");
-    // $(this).append(priMenu);
 
-    //if hidden, we show
-    //position of button that was clicked
-    let offset = {left: 0, top: 0};
-
-    if ($("#priDropdown:visible").length == 0) {
-        $(div).toggle(true);
-        // adjust menu to extend from lower left of button
-        offset = $(this).offset();
-        let leftOffset = $(div).children(".dropMenu").width()
-        offset.left -= leftOffset;
-        offset.top += $(this).height();
-    } else {
-        $(div).toggle(false);
-    }
+    let offset = $(this).offset();
+    let leftOffset = $(div).children(".dropMenu").width()
+    offset.left -= leftOffset;
+    offset.top += $(this).height();
 
     $(div).offset(offset);
+    $(".priButton").click(setCardPriority)
+
 
 }
 
 function hidePriMenu() {
-
     let $button = $(".priStar");
-    let $div = $("#priDropdown");
-    if (!$button.is(event.target)){
-        $div.offset({left: 0, top: 0});
-        $div.toggle(false);
+    if (!$button.is(event.target)) {
+        $("#priDropdown").remove();
     }
+}
+
+// sets colour of card
+function setCardPriority() {
+    //fixme do this by adding a .class to element?
+    //  css with flex box ordering rules based on priority
+
+    let color = $(this).css("background-color");
+    let parent = $(this).parents(".card").get(0);
+
+    $(parent).css("background-color", color);
 }
 
 
@@ -106,5 +114,6 @@ $(document).ready(function () {
     $(".delete").click(deleteItem);
     $(document).click(hidePriMenu);
     $(".priStar").click(showPriMenu);
+    $(".priButton").click(setCardPriority)
 
 });

@@ -69,7 +69,7 @@ main {
 
 }
 
-.done{
+.done > .itemText{
     text-decoration: line-through;
     color: #aaaaaaaa;
 }
@@ -86,13 +86,9 @@ main {
 }
 #priDropdown {
     position: fixed;
-    display: none;
-    left: 0;
-    top: 0;
 }
 #priDropdown > * {
     z-index: 10;
-
 }
 
 /*#priDropdown:hover .dropMenu{*/
@@ -128,6 +124,10 @@ main {
 .priLow{
     background-color: cornflowerblue;
 }
+.priNo{
+     background-color: inherit;
+ }
+
 /* Delete button on item card*/
 .delete {
     background: transparent;
