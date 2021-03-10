@@ -26,13 +26,12 @@ const priMenu =
 function addCard() {
     if (input.value !== "") {
         let newCard = $(card).appendTo("#list");
-        $(newCard).children(".itemText").html(input.value);
+        // $(newCard).children(".itemText").html(input.value);
         //set button reactions
         $(newCard).children(".delete").click(deleteCard);
         $(newCard).children(".check").change(checkDoneEvent)
         $(newCard).children(".priStar").click(showPriorityMenu)
 
-        // list.appendChild(newCard); //todo add blip effect to card being added
         input.value = "";
     } else {
 
@@ -40,6 +39,16 @@ function addCard() {
     }
 }
 
+function newCard() {
+        let newCard = $(card).appendTo("#list");
+        //set button reactions
+        $(newCard).children(".delete").click(deleteCard);
+        $(newCard).children(".check").change(checkDoneEvent)
+        $(newCard).children(".priStar").click(showPriorityMenu)
+
+        // list.appendChild(newCard); //todo add blip effect to card being added
+        $(newCard).children(".itemText").focus();
+}
 function checkDoneEvent() {
     //todo  change/add class on card at change?
     // var itemText = $(this).closest(".card").contents(".itemText").html;
@@ -103,13 +112,21 @@ function deleteCard() {
     $(this).parent(".card").remove();
 }
 
+// Remove all .card elements that are marked as done.
+
+function deleteAllDone() {
+    $(".card").filter(".done").remove();
+}
+
 $(document).ready(function () {
     input = document.getElementById("todoInput");
     // Text input and card creation events
-    $("#confirmEntry").click(addCard);
+    $("#confirmEntry").click(newCard);
     $("#todoInput").change(addCard);
+    $("#deleteDone").click(deleteAllDone)
 
-    // Mark a card as "done", striking through text and fading the card
+    // Mark a card as "done", striking through text
+    // and fading the card
     //todo change checkDone to trigger on box value, not event?
     // change checkbox to button/icon, and add/remove a .class?
     $(".check").change(toggleCardDoneClass);
