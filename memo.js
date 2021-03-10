@@ -1,11 +1,13 @@
-var list;
 var input;
+
+//todo figure out whether it's better to have these elements present in the actual HTML,
+// or if there's some other, better way?
 
 // Item card HTML
 const card =
     "        <div class=\"card\">\n" +
     "            <input class=\"check\" type=\"checkbox\">\n" +
-    "            <span class=\"itemText\"></span>\n" +
+    "            <span class=\"itemText\" contenteditable=\"true\"></span>\n" +
     "            <button class=\"priStar zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
     "            <button class=\"delete zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
     "        </div>"
@@ -21,23 +23,22 @@ const priMenu =
     "    </div>\n" +
     "</div>"
 
-
-function addItem() {
+function addCard() {
     if (input.value !== "") {
         let newCard = $(card).appendTo("#list");
         $(newCard).children(".itemText").html(input.value);
         //set button reactions
-        $(newCard).children(".delete").click(deleteItem);
+        $(newCard).children(".delete").click(deleteCard);
         $(newCard).children(".check").change(checkDoneEvent)
-        $(newCard).children(".priStar").click(showPriMenu)
+        $(newCard).children(".priStar").click(showPriorityMenu)
 
         // list.appendChild(newCard); //todo add blip effect to card being added
         input.value = "";
     } else {
+
         //todo error notif. Button shake and color red, with text bubble?
     }
 }
-
 
 function checkDoneEvent() {
     //todo  change/add class on card at change?
@@ -50,7 +51,7 @@ function checkDoneEvent() {
     }
 }
 
-function setDoneClass() {
+function toggleCardDoneClass() {
     //fixme this sets class on buttons as well as text
     if ($(this).is(":checked")) {
         // $(this).siblings(".itemText").addClass("done");
@@ -62,7 +63,7 @@ function setDoneClass() {
     }
 }
 
-function showPriMenu() {
+function showPriorityMenu() {
     $("#priDropdown").remove();
     // the menu div
     $(this).append(priMenu);
@@ -79,7 +80,7 @@ function showPriMenu() {
 
 }
 
-function hidePriMenu() {
+function hidePriorityMenu() {
     let $button = $(".priStar");
     if (!$button.is(event.target)) {
         $("#priDropdown").remove();
@@ -98,22 +99,27 @@ function setCardPriority() {
 }
 
 
-function deleteItem() {
+function deleteCard() {
     $(this).parent(".card").remove();
-
-
 }
 
 $(document).ready(function () {
-    list = document.getElementById("list");
     input = document.getElementById("todoInput");
-    $("#confirmEntry").click(addItem);
-    $("#todoInput").change(addItem);
-//todo change checkDone to trigger on box value, not event?
-    $(".check").change(setDoneClass);
-    $(".delete").click(deleteItem);
-    $(document).click(hidePriMenu);
-    $(".priStar").click(showPriMenu);
+    // Text input and card creation events
+    $("#confirmEntry").click(addCard);
+    $("#todoInput").change(addCard);
+
+    // Mark a card as "done", striking through text and fading the card
+    //todo change checkDone to trigger on box value, not event?
+    // change checkbox to button/icon, and add/remove a .class?
+    $(".check").change(toggleCardDoneClass);
+
+    // Delete a specific card
+    $(".delete").click(deleteCard);
+
+    // Handlers for setting card priority
+    $(document).click(hidePriorityMenu);
+    $(".priStar").click(showPriorityMenu);
     $(".priButton").click(setCardPriority)
 
 });
