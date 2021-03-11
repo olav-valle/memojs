@@ -116,7 +116,6 @@ main {
 #priDropdown > * {
     z-index: 10;
 }
-
 .dropMenu {
     position: inherit;
     box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34) ;
@@ -126,6 +125,7 @@ main {
 .dropMenuUnHide {
     visibility: visible;
 }
+/* Priority select buttons inside dropdown menu*/
 .priButton {
     border: 0;
     display: block;
@@ -133,18 +133,16 @@ main {
     font-size: inherit;
     padding: 0 0.5em;
 }
-
 .priTop{
     background-color: tomato;
 }
 .priMid{
     background-color: palegreen;
-/*    todo: find better colour*/
 }
 .priLow{
     background-color: cornflowerblue;
 }
-.priNo{
+.priNone{
      background-color: inherit;
  }
 
@@ -163,6 +161,7 @@ main {
         color: whitesmoke;
     }
 
+    /* todo: these can be changed to JS instead*/
     .card:hover {
         width: 101%;
         box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
