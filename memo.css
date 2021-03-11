@@ -1,8 +1,9 @@
 
-* {
+/* Ensure consistent border-box based element sizing */
+body > * {
     box-sizing: border-box;
 }
-
+/* Outer wrapper div */
 #wrapper {
     display: flex;
     flex-flow: row wrap;
@@ -14,44 +15,42 @@
     flex: 1 100%;
 }
 
+/* Header containing title and memo administration elements*/
 header {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-/*Textbox and button for adding new item*/
+/* Flex for header button elements*/
 #itemEntry {
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
 }
-
-/* Textbox */
-#todoInput {
-    flex-grow: 1;
-    /*font-size: 5vmin;*/
-}
-
-/* Confirmation button */
-#confirmEntry {
+/*Buttons for creating and administrating memo items*/
+.entryButton {
     border: 0;
-    background: transparent;
-
+    border-radius: 5px;
+    height: 4ex;
+    flex-basis: 40%;
+}
+/* "New" button */
+#newMemo {
+    background: #6dc96d;
+}
+/* "Remove Done" button */
+#deleteDone {
+    background-color: tomato;
 }
 
-#confirmEntry:hover {
-    color: #0f9d58;
-}
-
-/*Flex box of item cards*/
+/* --- Flex box of memo card elements ---*/
 main {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
 }
-
-/*An item */
+/* A memo card flex item */
 .card {
     width: 100%;
     height: 98%;
@@ -62,104 +61,107 @@ main {
     margin: 10px 0 0 0;
     border-radius: 5px;
     box-shadow: 5px 3px 5px -1px rgba(0, 0, 0, 0.34);
+    /* transition for element mouse hover*/
     transition: all 0.1s cubic-bezier(.18, .89, .32, 1.28);
     font-size: xx-large;
-    text-decoration: none;
     color: black;
-
+}
+/* User input text on item card */
+.itemText {
+    /*be greedy*/
+    flex-grow: 1;
 }
 
+/* --- Memo card button elements --- */
+.cardButton {
+    border: 0;
+    background-color: transparent;
+}
+/* Checkbox marking card item as "done" */
+.checkBtn {
+    margin-right: 1em;
+}
+.checkButtonHover {
+    color: orange;
+}
+/* Button and dropdown for priority marking */
+.priStarBtn {
+}
+/* Delete button on item card*/
+.deleteBtn {
+    color: #5d6164;
+}
+
+/* Styling for items checked off as done*/
+.done {
+}
 .done > .itemText{
+    filter: blur(1px);
     text-decoration: line-through;
     color: #aaaaaaaa;
 }
-@media all and (hover) {
-    .card:hover {
-        width: 101%;
-        box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
-    }
-}
 
-.priStar {
-    background: transparent;
-    border: 0;
-}
+/* --- Memo item priority select dropdown menu --- */
 #priDropdown {
     position: fixed;
+    width: min-content;
 }
 #priDropdown > * {
+    /*just to make sure the dropdown is always on top*/
     z-index: 10;
 }
-
-/*#priDropdown:hover .dropMenu{*/
-/*    display: block;*/
-/*}*/
-
+/* The actual dropdown menu element*/
 .dropMenu {
-    position: inherit;
-    min-width: 10em;
-    max-width: 10em;
     box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34) ;
-    font-size: larger;
     border-radius: 5px;
     background-color: white;
-
 }
+/* Priority select buttons inside dropdown menu*/
 .priButton {
     border: 0;
     display: block;
     width: 100%;
     font-size: inherit;
-}
-.priButton:hover {
-    filter: brightness(90%);
+    padding: 0 0.5em;
 }
 .priTop{
     background-color: tomato;
 }
 .priMid{
-    background-color: palegreen;
-/*    todo: find better colour*/
+    background-color: #6dc96d;
 }
 .priLow{
     background-color: cornflowerblue;
 }
-.priNo{
-     background-color: inherit;
- }
-
-/* Delete button on item card*/
-.delete {
-    background: transparent;
-    border: 0;
-    color: #5d6164;
-}
-.delete:hover {
-    color: #f24236;
+.priNone{
+    background-color: inherit;
 }
 
-/* Checkbox marking card item as "done" */
-.check {
-    margin-right: 1em;
-    /*width: 4vmin;*/
+
+/* --- Hover styling only enabled on devices that support it --- */
+/* todo: these can be changed to JS instead*/
+@media all and (hover) {
+    .entryButton:hover{
+        color: whitesmoke;
+    }
+
+    .card:hover {
+        width: 101%;
+        box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
+    }
+
+    .deleteBtn:hover {
+        color: #f24236;
+    }
+
+    .priButton:hover {
+        filter: brightness(90%);
+    }
+
 }
 
-/* User input text on item card */
-.itemText {
-    flex-grow: 1;
-}
-
+/* --- Palace holder for mobile media rules --- */
 @media all and (min-width: 600px) {
-
 }
-
 @media all and (min-width: 1200px) {
-    /*#list {*/
-    /*    flex: 3 0;*/
-    /*    order: 2;*/
-    /*}*/
-
-    /*body > * {*/
-    /*    font-size: large;*/
-    /*}*/
 }

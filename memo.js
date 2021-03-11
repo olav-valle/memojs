@@ -1,15 +1,15 @@
-var list;
-var input;
+//todo figure out whether it's better to have these elements present in the actual HTML,
+// or if there's some other, better way?
 
 // Item card HTML
 const card =
     "        <div class=\"card\">\n" +
-    "            <input class=\"check\" type=\"checkbox\">\n" +
-    "            <span class=\"itemText\"></span>\n" +
-    "            <button class=\"priStar zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
-    "            <button class=\"delete zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
+    "            <button class=\"cardButton checkBtn checkDone zmdi zmdi-check\"></button>" +
+    "            <span class=\"itemText\" contenteditable=\"true\"></span>\n" +
+    "            <button class=\"cardButton priStarBtn zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
+    "            <button class=\"cardButton deleteBtn zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
     "        </div>"
-
+// Priority select dropdown menu
 const priMenu =
     "<div id=\"priDropdown\">\n" +
     "    <div class=\"dropMenu\">\n" +
@@ -17,73 +17,77 @@ const priMenu =
     "        <button class=\"priButton priTop\">Top</button>\n" +
     "        <button class=\"priButton priMid\">Normal</button>\n" +
     "        <button class=\"priButton priLow\">Low</button>\n" +
-    "        <button class=\"priButton priNo\">Remove</button>\n" +
+    "        <button class=\"priButton priNone\">None</button>\n" +
     "    </div>\n" +
     "</div>"
 
 
-function addItem() {
-    if (input.value !== "") {
-        let newCard = $(card).appendTo("#list");
-        $(newCard).children(".itemText").html(input.value);
-        //set button reactions
-        $(newCard).children(".delete").click(deleteItem);
-        $(newCard).children(".check").change(checkDoneEvent)
-        $(newCard).children(".priStar").click(showPriMenu)
+// Adds a new card element to the DOM,
+// placing it inside the #list element,
+// setting event handlers for all buttons on card,
+// and finishing with input caret inside card text box.
+function newCard() {
+    $(card)
+        // add card to the list
+        .appendTo("#list")
+        .children(".checkBtn")
+        .hover(hoverOnCheckDone)
+        .end()
+        // Set functions for all card buttons
+        .children(".checkBtn")
+        .click(toggleCardDoneClass)
+        .end()
+        .children(".priStarBtn")
+        .click(showPriorityMenu)
+        .end()
+        .children(".deleteBtn")
+        .click(deleteCard)
+        .end()
+        // Move keyboard input caret to text box of new card
+        .children(".itemText")
+        .focus();
 
-        // list.appendChild(newCard); //todo add blip effect to card being added
-        input.value = "";
-    } else {
-        //todo error notif. Button shake and color red, with text bubble?
-    }
 }
 
-
-function checkDoneEvent() {
-    //todo  change/add class on card at change?
-    // var itemText = $(this).closest(".card").contents(".itemText").html;
-    let text = $(this).siblings(".itemText");
-    if ($(this).is(":checked")) {
-        text.css("text-decoration", "line-through").css("color", "#aaaaaa");
-    } else {
-        text.css("text-decoration", "none").css("color", "black")
-    }
+// hover effect handler for checkmark button
+function hoverOnCheckDone() {
+    $(this).toggleClass("checkButtonHover");
 }
 
-function setDoneClass() {
-    //fixme this sets class on buttons as well as text
-    if ($(this).is(":checked")) {
-        // $(this).siblings(".itemText").addClass("done");
-        $(this).parent(".card").addClass("done");
-
-    } else {
-        $(this).parent(".card").removeClass("done");
-        // $(this).siblings(".itemText").removeClass("done");
-    }
+// Toggle the .done class on a .card, and toggle the checkmark icon.
+function toggleCardDoneClass() {
+    event.stopPropagation();
+    $(this).parent(".card").toggleClass("done");
+    $(this).toggleClass("zmdi-check-circle").toggleClass("zmdi-check");
 }
 
-function showPriMenu() {
+// Show the priority select dropdown menu
+function showPriorityMenu() {
+    // Stop body element from triggering its hidePriorityMenu function
+    event.stopPropagation();
+
+    // Remove existing menu div
     $("#priDropdown").remove();
-    // the menu div
-    $(this).append(priMenu);
-    let div = $("#priDropdown");
 
-    let offset = $(this).offset();
-    let leftOffset = $(div).children(".dropMenu").width()
-    offset.left -= leftOffset;
-    offset.top += $(this).height();
+    // Append the menu div to the clicked element
+    let div = $(priMenu).appendTo($(this));
+    //todo can we avoid the need to assign the menu element to a variable, and still reference it from offset()?
 
-    $(div).offset(offset);
-    $(".priButton").click(setCardPriority)
-
-
+    // Set menu offset to below-left of mouse cursor position
+    $(div)
+        .offset({
+            left: (event.pageX - $(div).find(".dropMenu").innerWidth()),
+            top: event.pageY
+        })
+        .find(".priButton")
+        .click(setCardPriority)
 }
 
-function hidePriMenu() {
-    let $button = $(".priStar");
-    if (!$button.is(event.target)) {
-        $("#priDropdown").remove();
-    }
+
+// Remove any #priDropdown elements in the DOM
+function hidePriorityMenu() {
+    $("#priDropdown").detach();
+
 }
 
 // sets colour of card
@@ -91,29 +95,54 @@ function setCardPriority() {
     //fixme do this by adding a .class to element?
     //  css with flex box ordering rules based on priority
 
-    let color = $(this).css("background-color");
-    let parent = $(this).parents(".card").get(0);
-
-    $(parent).css("background-color", color);
+    // Stop priority select event from propagating up to .priStar parent
+    // and triggering showPriorityMenu
+    event.stopPropagation();
+    $(this)
+        .parents(".card")
+        .css("background-color", $(this).css("background-color"));
 }
 
-
-function deleteItem() {
+// Deletes the parent .card element of the event target
+function deleteCard() {
     $(this).parent(".card").remove();
-
-
 }
 
+// Remove all .card elements that are marked as done.
+function deleteAllDone() {
+    $(".card").filter(".done").remove();
+}
+
+// Set handlers for application elements present at document load.
 $(document).ready(function () {
-    list = document.getElementById("list");
-    input = document.getElementById("todoInput");
-    $("#confirmEntry").click(addItem);
-    $("#todoInput").change(addItem);
-//todo change checkDone to trigger on box value, not event?
-    $(".check").change(setDoneClass);
-    $(".delete").click(deleteItem);
-    $(document).click(hidePriMenu);
-    $(".priStar").click(showPriMenu);
-    $(".priButton").click(setCardPriority)
+
+    //todo Can we change these to use event handling delegation?
+    // From my understanding this should let us remove all the parts of
+    // the application code where we are attaching handlers to new
+    // elements (e.g. in newCard, with all the buttons).
+    // This would greatly improve cohesion, and increase
+    // maintainability by collecting all handler assignments to one place.
+
+    // and card creation events
+    $("#newMemo").click(newCard);
+    $("#deleteDone").click(deleteAllDone);
+
+    // Mark a card as "done", striking through text
+    // and fading the card
+
+
+    // new check done handlers
+    $(".checkBtn")
+        .hover(hoverOnCheckDone)
+        .click(toggleCardDoneClass);
+
+
+    // Delete a specific card
+    $(".deleteBtn").click(deleteCard);
+
+    // Handlers for setting card priority
+    $(document).click(hidePriorityMenu);
+    $(".priStarBtn").click(showPriorityMenu);
+    // $(".priButton").click(setCardPriority);
 
 });
