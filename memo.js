@@ -1,4 +1,3 @@
-var input;
 
 //todo figure out whether it's better to have these elements present in the actual HTML,
 // or if there's some other, better way?
@@ -11,7 +10,7 @@ const card =
     "            <button class=\"priStar zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
     "            <button class=\"delete zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
     "        </div>"
-
+// Priority select dropdown menu
 const priMenu =
     "<div id=\"priDropdown\">\n" +
     "    <div class=\"dropMenu\">\n" +
@@ -24,23 +23,40 @@ const priMenu =
     "</div>"
 
 
+// Adds a new card element to the DOM,
+// setting event handlers for all buttons on card,
+// and finishing with input caret inside card text box.
 function newCard() {
-    let newCard = $(card).appendTo("#list");
-    //set button reactions
-    $(newCard).children(".checkButton").hover(hoverOnCheckDone);
-    $(newCard).children(".checkButton").click(toggleCardDoneClass);
-    $(newCard).children(".priStar").click(showPriorityMenu)
-    $(newCard).children(".delete").click(deleteCard);
-    $(newCard).children(".checkButton").click(toggleCardDoneClass())
+    $(card)
+        // add card to the list
+        .appendTo("#list")
+            .children(".checkButton")
+            .hover(hoverOnCheckDone)
+        .end()
+        // Set functions for all card buttons
+            .children(".checkButton")
+            .click(toggleCardDoneClass)
+        .end()
+            .children(".priStar")
+            .click(showPriorityMenu)
+        .end()
+            .children(".delete")
+            .click(deleteCard)
+        .end()
+            .children(".checkButton")
+            .click(toggleCardDoneClass)
+        .end()
+        // Move keyboard input caret to text box of new card
+            .children(".itemText")
+            .focus();
 
-    // list.appendChild(newCard); //todo add blip effect to card being added
-    $(newCard).children(".itemText").focus();
 }
 
 // hover effect handler for checkmark button
 function hoverOnCheckDone() {
     $(this).toggleClass("checkButtonHover");
 }
+
 // Toggle the .done class on a .card, and toggle the checkmark icon.
 function toggleCardDoneClass() {
     $(this).parent(".card").toggleClass("done");
@@ -51,27 +67,28 @@ function toggleCardDoneClass() {
 function showPriorityMenu() {
 
     // remove existing menu div
-    //let div =
     $("#priDropdown").remove();
-    //.end().appendTo($(this))
 
     // append the menu div to the clicked element
     let div = $(priMenu).appendTo($(this));
 
     // change the offset of the menu from clicked element
     let offset = $(this).offset();
+
     offset.top += ($(this) // below element
         .height() * 0.5);
+
     offset.left -= ($(div) // Extend to the left
         .children(".dropMenu")
-        .width() - ($(this).width()*0.5));
-    $(div).offset(offset).show();
+        .width() - ($(this).width() * 0.5));
+
+    $(div).offset(offset);
 
     $(".priButton").click(setCardPriority)
 
 
 }
-
+// Remove any #priDropdown elements in the DOM
 function hidePriorityMenu() {
     // todo look into e.stopPropagation to bypass need for button check?
     let $button = $(".priStar");
@@ -91,23 +108,20 @@ function setCardPriority() {
     $(parent).css("background-color", color);
 }
 
-
+// Deletes the parent .card element of the event target
 function deleteCard() {
     $(this).parent(".card").remove();
 }
 
 // Remove all .card elements that are marked as done.
-
 function deleteAllDone() {
     $(".card").filter(".done").remove();
 }
 
-
-
-
+// Set handlers for application elements present at document load.
 $(document).ready(function () {
-    input = document.getElementById("todoInput");
-    // Text input and card creation events
+
+    // and card creation events
     $("#newMemo").click(newCard);
     $("#deleteDone").click(deleteAllDone)
 
@@ -116,7 +130,9 @@ $(document).ready(function () {
 
 
     // new check done handlers
-    $(".checkButton").hover(hoverOnCheckDone).click(toggleCardDoneClass);
+    $(".checkButton")
+        .hover(hoverOnCheckDone)
+        .click(toggleCardDoneClass);
 
 
     // Delete a specific card
