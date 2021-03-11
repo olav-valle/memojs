@@ -4,10 +4,10 @@
 // Item card HTML
 const card =
     "        <div class=\"card\">\n" +
-    "            <button class=\"checkButton zmdi zmdi-check\"></button>" +
+    "            <button class=\"cardButton checkBtn checkDone zmdi zmdi-check\"></button>" +
     "            <span class=\"itemText\" contenteditable=\"true\"></span>\n" +
-    "            <button class=\"priStar zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
-    "            <button class=\"delete zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
+    "            <button class=\"cardButton priStarBtn zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
+    "            <button class=\"cardButton deleteBtn zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
     "        </div>"
 // Priority select dropdown menu
 const priMenu =
@@ -30,17 +30,17 @@ function newCard() {
     $(card)
         // add card to the list
         .appendTo("#list")
-        .children(".checkButton")
+        .children(".checkBtn")
         .hover(hoverOnCheckDone)
         .end()
         // Set functions for all card buttons
-        .children(".checkButton")
+        .children(".checkBtn")
         .click(toggleCardDoneClass)
         .end()
-        .children(".priStar")
+        .children(".priStarBtn")
         .click(showPriorityMenu)
         .end()
-        .children(".delete")
+        .children(".deleteBtn")
         .click(deleteCard)
         .end()
         // Move keyboard input caret to text box of new card
@@ -132,17 +132,17 @@ $(document).ready(function () {
 
 
     // new check done handlers
-    $(".checkButton")
+    $(".checkBtn")
         .hover(hoverOnCheckDone)
         .click(toggleCardDoneClass);
 
 
     // Delete a specific card
-    $(".delete").click(deleteCard);
+    $(".deleteBtn").click(deleteCard);
 
     // Handlers for setting card priority
     $(document).click(hidePriorityMenu);
-    $(".priStar").click(showPriorityMenu);
+    $(".priStarBtn").click(showPriorityMenu);
     // $(".priButton").click(setCardPriority);
 
 });
