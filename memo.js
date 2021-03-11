@@ -17,7 +17,7 @@ const priMenu =
     "        <button class=\"priButton priTop\">Top</button>\n" +
     "        <button class=\"priButton priMid\">Normal</button>\n" +
     "        <button class=\"priButton priLow\">Low</button>\n" +
-    "        <button class=\"priButton priNo\">None</button>\n" +
+    "        <button class=\"priButton priNone\">None</button>\n" +
     "    </div>\n" +
     "</div>"
 
@@ -102,7 +102,6 @@ function setCardPriority() {
     event.stopPropagation();
     $(this)
         .parents(".card")
-        .get(0)
         .css("background-color", $(this).css("background-color"));
 }
 
