@@ -23,6 +23,7 @@ const priMenu =
 
 
 // Adds a new card element to the DOM,
+// placing it inside the #list element,
 // setting event handlers for all buttons on card,
 // and finishing with input caret inside card text box.
 function newCard() {
@@ -64,30 +65,24 @@ function toggleCardDoneClass() {
 
 // Show the priority select dropdown menu
 function showPriorityMenu() {
+    // Stop body element from triggering its hidePriorityMenu function
     event.stopPropagation();
-    // remove existing menu div
+
+    // Remove existing menu div
     $("#priDropdown").remove();
 
-    // append the menu div to the clicked element
+    // Append the menu div to the clicked element
     let div = $(priMenu).appendTo($(this));
+    //todo can we avoid the need to assign the menu element to a variable, and still reference it from offset()?
 
-    // change the offset of the menu from clicked element
-    let offset = $(this).offset();
-
-    offset.top += ($(this) // below element
-        .height() * 0.5);
-
-    offset.left -= ($(div) // Extend to the left
-        .children(".dropMenu")
-        .width() - ($(this).width() * 0.5));
-
-
-    let o = {left: (event.pageX - $(div).find(".dropMenu").innerWidth()),
-    top: event.pageY}
-
-    $(div).offset(o);
-
-    $(".priButton").click(setCardPriority)
+    // Set menu offset to below-left of mouse cursor position
+    $(div)
+        .offset({
+            left: (event.pageX - $(div).find(".dropMenu").innerWidth()),
+            top: event.pageY
+        })
+        .find(".priButton")
+        .click(setCardPriority)
 }
 
 
@@ -102,11 +97,13 @@ function setCardPriority() {
     //fixme do this by adding a .class to element?
     //  css with flex box ordering rules based on priority
 
+    // Stop priority select event from propagating up to .priStar parent
+    // and triggering showPriorityMenu
     event.stopPropagation();
-    let color = $(this).css("background-color");
-    let parent = $(this).parents(".card").get(0);
-
-    $(parent).css("background-color", color);
+    $(this)
+        .parents(".card")
+        .get(0)
+        .css("background-color", $(this).css("background-color"));
 }
 
 // Deletes the parent .card element of the event target
@@ -121,6 +118,13 @@ function deleteAllDone() {
 
 // Set handlers for application elements present at document load.
 $(document).ready(function () {
+
+    //todo Can we change these to use event handling delegation?
+    // From my understanding this should let us remove all the parts of
+    // the application code where we are attaching handlers to new
+    // elements (e.g. in newCard, with all the buttons).
+    // This would greatly improve cohesion, and increase
+    // maintainability by collecting all handler assignments to one place.
 
     // and card creation events
     $("#newMemo").click(newCard);
