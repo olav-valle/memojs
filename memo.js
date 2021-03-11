@@ -1,4 +1,3 @@
-
 //todo figure out whether it's better to have these elements present in the actual HTML,
 // or if there's some other, better way?
 
@@ -24,31 +23,32 @@ const priMenu =
 
 
 // Adds a new card element to the DOM,
+// placing it inside the #list element,
 // setting event handlers for all buttons on card,
 // and finishing with input caret inside card text box.
 function newCard() {
     $(card)
         // add card to the list
         .appendTo("#list")
-            .children(".checkButton")
-            .hover(hoverOnCheckDone)
+        .children(".checkButton")
+        .hover(hoverOnCheckDone)
         .end()
         // Set functions for all card buttons
-            .children(".checkButton")
-            .click(toggleCardDoneClass)
+        .children(".checkButton")
+        .click(toggleCardDoneClass)
         .end()
-            .children(".priStar")
-            .click(showPriorityMenu)
+        .children(".priStar")
+        .click(showPriorityMenu)
         .end()
-            .children(".delete")
-            .click(deleteCard)
+        .children(".delete")
+        .click(deleteCard)
         .end()
-            .children(".checkButton")
-            .click(toggleCardDoneClass)
+        .children(".checkButton")
+        .click(toggleCardDoneClass)
         .end()
         // Move keyboard input caret to text box of new card
-            .children(".itemText")
-            .focus();
+        .children(".itemText")
+        .focus();
 
 }
 
@@ -65,36 +65,31 @@ function toggleCardDoneClass() {
 
 // Show the priority select dropdown menu
 function showPriorityMenu() {
+    // Stop body element from triggering its hidePriorityMenu function
+    event.stopPropagation();
 
-    // remove existing menu div
+    // Remove existing menu div
     $("#priDropdown").remove();
 
-    // append the menu div to the clicked element
+    // Append the menu div to the clicked element
     let div = $(priMenu).appendTo($(this));
+    //todo can we avoid the need to assign the menu element to a variable, and still reference it from offset()?
 
-    // change the offset of the menu from clicked element
-    let offset = $(this).offset();
-
-    offset.top += ($(this) // below element
-        .height() * 0.5);
-
-    offset.left -= ($(div) // Extend to the left
-        .children(".dropMenu")
-        .width() - ($(this).width() * 0.5));
-
-    $(div).offset(offset);
-
-    $(".priButton").click(setCardPriority)
-
-
+    // Set menu offset to below-left of mouse cursor position
+    $(div)
+        .offset({
+            left: (event.pageX - $(div).find(".dropMenu").innerWidth()),
+            top: event.pageY
+        })
+        .find(".priButton")
+        .click(setCardPriority)
 }
+
+
 // Remove any #priDropdown elements in the DOM
 function hidePriorityMenu() {
-    // todo look into e.stopPropagation to bypass need for button check?
-    let $button = $(".priStar");
-    if (!$button.is(event.target)) {
-        $("#priDropdown").remove();
-    }
+    $("#priDropdown").detach();
+
 }
 
 // sets colour of card
@@ -102,10 +97,13 @@ function setCardPriority() {
     //fixme do this by adding a .class to element?
     //  css with flex box ordering rules based on priority
 
-    let color = $(this).css("background-color");
-    let parent = $(this).parents(".card").get(0);
-
-    $(parent).css("background-color", color);
+    // Stop priority select event from propagating up to .priStar parent
+    // and triggering showPriorityMenu
+    event.stopPropagation();
+    $(this)
+        .parents(".card")
+        .get(0)
+        .css("background-color", $(this).css("background-color"));
 }
 
 // Deletes the parent .card element of the event target
@@ -121,9 +119,16 @@ function deleteAllDone() {
 // Set handlers for application elements present at document load.
 $(document).ready(function () {
 
+    //todo Can we change these to use event handling delegation?
+    // From my understanding this should let us remove all the parts of
+    // the application code where we are attaching handlers to new
+    // elements (e.g. in newCard, with all the buttons).
+    // This would greatly improve cohesion, and increase
+    // maintainability by collecting all handler assignments to one place.
+
     // and card creation events
     $("#newMemo").click(newCard);
-    $("#deleteDone").click(deleteAllDone)
+    $("#deleteDone").click(deleteAllDone);
 
     // Mark a card as "done", striking through text
     // and fading the card
@@ -141,6 +146,6 @@ $(document).ready(function () {
     // Handlers for setting card priority
     $(document).click(hidePriorityMenu);
     $(".priStar").click(showPriorityMenu);
-    $(".priButton").click(setCardPriority)
+    // $(".priButton").click(setCardPriority);
 
 });
