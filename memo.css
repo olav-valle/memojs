@@ -1,8 +1,9 @@
 
-* {
+/* Ensure consistent border-box based element sizing */
+body > * {
     box-sizing: border-box;
 }
-
+/* Outer wrapper div */
 #wrapper {
     display: flex;
     flex-flow: row wrap;
@@ -14,19 +15,20 @@
     flex: 1 100%;
 }
 
+/* Header containing title and memo administration elements*/
 header {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-/*Buttons for creating and administrating memo items*/
+/* Flex for header button elements*/
 #itemEntry {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
+/*Buttons for creating and administrating memo items*/
 .entryButton {
     border: 0;
     border-radius: 5px;
@@ -35,21 +37,20 @@ header {
 }
 /* "New" button */
 #newMemo {
-    background: #0f9d58;
+    background: #6dc96d;
 }
 /* "Remove Done" button */
 #deleteDone {
     background-color: tomato;
 }
 
-
-/*Flex box of item cards*/
+/* --- Flex box of memo card elements ---*/
 main {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
 }
-/*An item */
+/* A memo card flex item */
 .card {
     width: 100%;
     height: 98%;
@@ -60,53 +61,56 @@ main {
     margin: 10px 0 0 0;
     border-radius: 5px;
     box-shadow: 5px 3px 5px -1px rgba(0, 0, 0, 0.34);
+    /* transition for element mouse hover*/
     transition: all 0.1s cubic-bezier(.18, .89, .32, 1.28);
     font-size: xx-large;
-    text-decoration: none;
     color: black;
-
+}
+/* User input text on item card */
+.itemText {
+    /*be greedy*/
+    flex-grow: 1;
 }
 
-/* Checkbox marking card item as "done" */
-.checkButton {
+/* --- Memo card button elements --- */
+.cardButton {
     border: 0;
     background-color: transparent;
+}
+/* Checkbox marking card item as "done" */
+.checkBtn {
     margin-right: 1em;
 }
-
 .checkButtonHover {
     color: orange;
+}
+/* Button and dropdown for priority marking */
+.priStarBtn {
+}
+/* Delete button on item card*/
+.deleteBtn {
+    color: #5d6164;
 }
 
 /* Styling for items checked off as done*/
 .done {
 }
-
 .done > .itemText{
     filter: blur(1px);
     text-decoration: line-through;
     color: #aaaaaaaa;
 }
 
-
-/* User input text on item card */
-.itemText {
-    flex-grow: 1;
-}
-
-
-/* Button and dropdown for priority marking */
-.priStar {
-    background: transparent;
-    border: 0;
-}
+/* --- Memo item priority select dropdown menu --- */
 #priDropdown {
     position: fixed;
     width: min-content;
 }
 #priDropdown > * {
+    /*just to make sure the dropdown is always on top*/
     z-index: 10;
 }
+/* The actual dropdown menu element*/
 .dropMenu {
     box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34) ;
     border-radius: 5px;
@@ -124,37 +128,29 @@ main {
     background-color: tomato;
 }
 .priMid{
-    background-color: palegreen;
+    background-color: #6dc96d;
 }
 .priLow{
     background-color: cornflowerblue;
 }
 .priNone{
-     background-color: inherit;
- }
-
-/* Delete button on item card*/
-.delete {
-    background: transparent;
-    border: 0;
-    color: #5d6164;
+    background-color: inherit;
 }
 
 
-/* --- Hover only enabled on devices that support it --- */
+/* --- Hover styling only enabled on devices that support it --- */
+/* todo: these can be changed to JS instead*/
 @media all and (hover) {
-
     .entryButton:hover{
         color: whitesmoke;
     }
 
-    /* todo: these can be changed to JS instead*/
     .card:hover {
         width: 101%;
         box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
     }
 
-    .delete:hover {
+    .deleteBtn:hover {
         color: #f24236;
     }
 
@@ -164,7 +160,7 @@ main {
 
 }
 
-/* --- palceholder for mobile media rules --- */
+/* --- Palace holder for mobile media rules --- */
 @media all and (min-width: 600px) {
 }
 @media all and (min-width: 1200px) {
