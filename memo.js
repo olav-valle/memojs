@@ -1,4 +1,3 @@
-
 //todo figure out whether it's better to have these elements present in the actual HTML,
 // or if there's some other, better way?
 
@@ -30,25 +29,25 @@ function newCard() {
     $(card)
         // add card to the list
         .appendTo("#list")
-            .children(".checkButton")
-            .hover(hoverOnCheckDone)
+        .children(".checkButton")
+        .hover(hoverOnCheckDone)
         .end()
         // Set functions for all card buttons
-            .children(".checkButton")
-            .click(toggleCardDoneClass)
+        .children(".checkButton")
+        .click(toggleCardDoneClass)
         .end()
-            .children(".priStar")
-            .click(showPriorityMenu)
+        .children(".priStar")
+        .click(showPriorityMenu)
         .end()
-            .children(".delete")
-            .click(deleteCard)
+        .children(".delete")
+        .click(deleteCard)
         .end()
-            .children(".checkButton")
-            .click(toggleCardDoneClass)
+        .children(".checkButton")
+        .click(toggleCardDoneClass)
         .end()
         // Move keyboard input caret to text box of new card
-            .children(".itemText")
-            .focus();
+        .children(".itemText")
+        .focus();
 
 }
 
@@ -65,7 +64,7 @@ function toggleCardDoneClass() {
 
 // Show the priority select dropdown menu
 function showPriorityMenu() {
-
+    event.stopPropagation();
     // remove existing menu div
     $("#priDropdown").remove();
 
@@ -85,16 +84,13 @@ function showPriorityMenu() {
     $(div).offset(offset);
 
     $(".priButton").click(setCardPriority)
-
-
 }
+
+
 // Remove any #priDropdown elements in the DOM
 function hidePriorityMenu() {
-    // todo look into e.stopPropagation to bypass need for button check?
-    let $button = $(".priStar");
-    if (!$button.is(event.target)) {
-        $("#priDropdown").remove();
-    }
+    $("#priDropdown").detach();
+
 }
 
 // sets colour of card
@@ -123,7 +119,7 @@ $(document).ready(function () {
 
     // and card creation events
     $("#newMemo").click(newCard);
-    $("#deleteDone").click(deleteAllDone)
+    $("#deleteDone").click(deleteAllDone);
 
     // Mark a card as "done", striking through text
     // and fading the card
@@ -141,6 +137,6 @@ $(document).ready(function () {
     // Handlers for setting card priority
     $(document).click(hidePriorityMenu);
     $(".priStar").click(showPriorityMenu);
-    $(".priButton").click(setCardPriority)
+    // $(".priButton").click(setCardPriority);
 
 });
