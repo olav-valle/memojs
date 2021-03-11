@@ -81,7 +81,11 @@ function showPriorityMenu() {
         .children(".dropMenu")
         .width() - ($(this).width() * 0.5));
 
-    $(div).offset(offset);
+
+    let o = {left: (event.pageX - $(div).find(".dropMenu").innerWidth()),
+    top: event.pageY}
+
+    $(div).offset(o);
 
     $(".priButton").click(setCardPriority)
 }
@@ -98,6 +102,7 @@ function setCardPriority() {
     //fixme do this by adding a .class to element?
     //  css with flex box ordering rules based on priority
 
+    event.stopPropagation();
     let color = $(this).css("background-color");
     let parent = $(this).parents(".card").get(0);
 
