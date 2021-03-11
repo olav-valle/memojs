@@ -20,36 +20,28 @@ header {
     align-items: center;
 }
 
-/*Textbox and button for adding new item*/
+/*Buttons for creating and administrating memo items*/
 #itemEntry {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
-
 .entryButton {
+    border: 0;
     border-radius: 5px;
     height: 4ex;
+    flex-basis: 40%;
 }
-
-/* Textbox */
-/*#todoInput {*/
-/*    flex-grow: 1;*/
-/*    !*font-size: 5vmin;*!*/
-/*}*/
-
-/* New card button */
+/* "New" button */
 #newMemo {
-    border: 0;
     background: #0f9d58;
 }
-
-/* button to delete all cards marked "done"*/
+/* "Remove Done" button */
 #deleteDone {
-    border: 0;
     background-color: tomato;
 }
+
 
 /*Flex box of item cards*/
 main {
@@ -57,7 +49,6 @@ main {
     flex-direction: column-reverse;
     align-items: center;
 }
-
 /*An item */
 .card {
     width: 100%;
@@ -117,13 +108,9 @@ main {
     z-index: 10;
 }
 .dropMenu {
-    position: inherit;
     box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34) ;
     border-radius: 5px;
     background-color: white;
-}
-.dropMenuUnHide {
-    visibility: visible;
 }
 /* Priority select buttons inside dropdown menu*/
 .priButton {
@@ -157,7 +144,7 @@ main {
 /* --- Hover only enabled on devices that support it --- */
 @media all and (hover) {
 
-    #newMemo:hover {
+    .entryButton:hover{
         color: whitesmoke;
     }
 

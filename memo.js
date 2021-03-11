@@ -43,9 +43,6 @@ function newCard() {
         .children(".delete")
         .click(deleteCard)
         .end()
-        .children(".checkButton")
-        .click(toggleCardDoneClass)
-        .end()
         // Move keyboard input caret to text box of new card
         .children(".itemText")
         .focus();
@@ -59,6 +56,7 @@ function hoverOnCheckDone() {
 
 // Toggle the .done class on a .card, and toggle the checkmark icon.
 function toggleCardDoneClass() {
+    event.stopPropagation();
     $(this).parent(".card").toggleClass("done");
     $(this).toggleClass("zmdi-check-circle").toggleClass("zmdi-check");
 }
