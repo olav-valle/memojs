@@ -39,16 +39,13 @@ header {
 /*    !*font-size: 5vmin;*!*/
 /*}*/
 
-/* Confirmation button */
-#confirmEntry {
+/* New card button */
+#newMemo {
     border: 0;
     background: #0f9d58;
-
-
-
 }
 
-
+/* button to delete all cards marked "done"*/
 #deleteDone {
     border: 0;
     background-color: tomato;
@@ -79,6 +76,18 @@ main {
 
 }
 
+/* Checkbox marking card item as "done" */
+.checkButton {
+    border: 0;
+    background-color: transparent;
+    margin-right: 1em;
+}
+
+.checkButtonHover {
+    color: orange;
+}
+
+/* Styling for items checked off as done*/
 .done {
 }
 
@@ -89,36 +98,40 @@ main {
 }
 
 
+/* User input text on item card */
+.itemText {
+    flex-grow: 1;
+}
+
+
+/* Button and dropdown for priority marking */
 .priStar {
     background: transparent;
     border: 0;
 }
 #priDropdown {
     position: fixed;
+    width: min-content;
 }
 #priDropdown > * {
     z-index: 10;
 }
 
-/*#priDropdown:hover .dropMenu{*/
-/*    display: block;*/
-/*}*/
-
 .dropMenu {
     position: inherit;
-    min-width: 10em;
-    max-width: 10em;
     box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34) ;
-    font-size: larger;
     border-radius: 5px;
     background-color: white;
-
+}
+.dropMenuUnHide {
+    visibility: visible;
 }
 .priButton {
     border: 0;
     display: block;
     width: 100%;
     font-size: inherit;
+    padding: 0 0.5em;
 }
 
 .priTop{
@@ -142,20 +155,11 @@ main {
     color: #5d6164;
 }
 
-/* Checkbox marking card item as "done" */
-.check {
-    margin-right: 1em;
-    /*width: 4vmin;*/
-}
 
-/* User input text on item card */
-.itemText {
-    flex-grow: 1;
-}
 /* --- Hover only enabled on devices that support it --- */
 @media all and (hover) {
 
-    #confirmEntry:hover {
+    #newMemo:hover {
         color: whitesmoke;
     }
 

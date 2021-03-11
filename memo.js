@@ -6,7 +6,7 @@ var input;
 // Item card HTML
 const card =
     "        <div class=\"card\">\n" +
-    "            <input class=\"check\" type=\"checkbox\">\n" +
+    "            <button class=\"checkButton zmdi zmdi-check\"></button>" +
     "            <span class=\"itemText\" contenteditable=\"true\"></span>\n" +
     "            <button class=\"priStar zmdi zmdi-star-outline\" title=\"Select priority level.\"></button>\n" +
     "            <button class=\"delete zmdi zmdi-delete\" title=\"Delete\"></button>\n" +
@@ -19,77 +19,61 @@ const priMenu =
     "        <button class=\"priButton priTop\">Top</button>\n" +
     "        <button class=\"priButton priMid\">Normal</button>\n" +
     "        <button class=\"priButton priLow\">Low</button>\n" +
-    "        <button class=\"priButton priNo\">Remove</button>\n" +
+    "        <button class=\"priButton priNo\">None</button>\n" +
     "    </div>\n" +
     "</div>"
 
-function addCard() {
-    if (input.value !== "") {
-        let newCard = $(card).appendTo("#list");
-        // $(newCard).children(".itemText").html(input.value);
-        //set button reactions
-        $(newCard).children(".delete").click(deleteCard);
-        $(newCard).children(".check").change(checkDoneEvent)
-        $(newCard).children(".priStar").click(showPriorityMenu)
-
-        input.value = "";
-    } else {
-
-        //todo error notif. Button shake and color red, with text bubble?
-    }
-}
 
 function newCard() {
-        let newCard = $(card).appendTo("#list");
-        //set button reactions
-        $(newCard).children(".delete").click(deleteCard);
-        $(newCard).children(".check").change(checkDoneEvent)
-        $(newCard).children(".priStar").click(showPriorityMenu)
+    let newCard = $(card).appendTo("#list");
+    //set button reactions
+    $(newCard).children(".checkButton").hover(hoverOnCheckDone);
+    $(newCard).children(".checkButton").click(toggleCardDoneClass);
+    $(newCard).children(".priStar").click(showPriorityMenu)
+    $(newCard).children(".delete").click(deleteCard);
+    $(newCard).children(".checkButton").click(toggleCardDoneClass())
 
-        // list.appendChild(newCard); //todo add blip effect to card being added
-        $(newCard).children(".itemText").focus();
-}
-function checkDoneEvent() {
-    //todo  change/add class on card at change?
-    // var itemText = $(this).closest(".card").contents(".itemText").html;
-    let text = $(this).siblings(".itemText");
-    if ($(this).is(":checked")) {
-        text.css("text-decoration", "line-through").css("color", "#aaaaaa");
-    } else {
-        text.css("text-decoration", "none").css("color", "black")
-    }
+    // list.appendChild(newCard); //todo add blip effect to card being added
+    $(newCard).children(".itemText").focus();
 }
 
+// hover effect handler for checkmark button
+function hoverOnCheckDone() {
+    $(this).toggleClass("checkButtonHover");
+}
+// Toggle the .done class on a .card, and toggle the checkmark icon.
 function toggleCardDoneClass() {
-    //fixme this sets class on buttons as well as text
-    if ($(this).is(":checked")) {
-        // $(this).siblings(".itemText").addClass("done");
-        $(this).parent(".card").addClass("done");
-
-    } else {
-        $(this).parent(".card").removeClass("done");
-        // $(this).siblings(".itemText").removeClass("done");
-    }
+    $(this).parent(".card").toggleClass("done");
+    $(this).toggleClass("zmdi-check-circle").toggleClass("zmdi-check");
 }
 
+// Show the priority select dropdown menu
 function showPriorityMenu() {
+
+    // remove existing menu div
+    //let div =
     $("#priDropdown").remove();
-    // the menu div
-    $(this).append(priMenu);
-    let div = $("#priDropdown");
+    //.end().appendTo($(this))
 
+    // append the menu div to the clicked element
+    let div = $(priMenu).appendTo($(this));
+
+    // change the offset of the menu from clicked element
     let offset = $(this).offset();
-    let leftOffset = $(div).children(".dropMenu").width()
-    offset.left -= leftOffset;
-    offset.top += $(this).height();
+    offset.top += ($(this) // below element
+        .height() * 0.5);
+    offset.left -= ($(div) // Extend to the left
+        .children(".dropMenu")
+        .width() - ($(this).width()*0.5));
+    $(div).offset(offset).show();
 
-    $(div).offset(offset);
     $(".priButton").click(setCardPriority)
 
 
 }
 
 function hidePriorityMenu() {
+    // todo look into e.stopPropagation to bypass need for button check?
     let $button = $(".priStar");
     if (!$button.is(event.target)) {
         $("#priDropdown").remove();
@@ -118,18 +102,22 @@ function deleteAllDone() {
     $(".card").filter(".done").remove();
 }
 
+
+
+
 $(document).ready(function () {
     input = document.getElementById("todoInput");
     // Text input and card creation events
-    $("#confirmEntry").click(newCard);
-    $("#todoInput").change(addCard);
+    $("#newMemo").click(newCard);
     $("#deleteDone").click(deleteAllDone)
 
     // Mark a card as "done", striking through text
     // and fading the card
-    //todo change checkDone to trigger on box value, not event?
-    // change checkbox to button/icon, and add/remove a .class?
-    $(".check").change(toggleCardDoneClass);
+
+
+    // new check done handlers
+    $(".checkButton").hover(hoverOnCheckDone).click(toggleCardDoneClass);
+
 
     // Delete a specific card
     $(".delete").click(deleteCard);
