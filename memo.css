@@ -81,9 +81,7 @@ main {
 .checkBtn {
     margin-right: 1em;
 }
-.checkButtonHover {
-    color: orange;
-}
+
 /* Button and dropdown for priority marking */
 .priStarBtn {
 }
@@ -117,7 +115,7 @@ main {
     background-color: white;
 }
 /* Priority select buttons inside dropdown menu*/
-.priButton {
+.priMenuBtn {
     border: 0;
     display: block;
     width: 100%;
@@ -150,11 +148,15 @@ main {
         box-shadow: 5px 3px 5px 2px rgba(0, 0, 0, 0.34);
     }
 
+    .checkButtonHover {
+        color: orange;
+    }
+
     .deleteBtn:hover {
         color: #f24236;
     }
 
-    .priButton:hover {
+    .priMenuBtn:hover {
         filter: brightness(90%);
     }
 

@@ -14,10 +14,10 @@ const priMenu =
     "<div id=\"priDropdown\">\n" +
     "    <div class=\"dropMenu\">\n" +
     "        <span>Priority:</span>\n" +
-    "        <button class=\"priButton priTop\">Top</button>\n" +
-    "        <button class=\"priButton priMid\">Normal</button>\n" +
-    "        <button class=\"priButton priLow\">Low</button>\n" +
-    "        <button class=\"priButton priNone\">None</button>\n" +
+    "        <button class=\"priMenuBtn priTop\">Top</button>\n" +
+    "        <button class=\"priMenuBtn priMid\">Normal</button>\n" +
+    "        <button class=\"priMenuBtn priLow\">Low</button>\n" +
+    "        <button class=\"priMenuBtn priNone\">None</button>\n" +
     "    </div>\n" +
     "</div>"
 
@@ -30,19 +30,6 @@ function newCard() {
     $(card)
         // add card to the list
         .appendTo("#list")
-        .children(".checkBtn")
-        .hover(hoverOnCheckDone)
-        .end()
-        // Set functions for all card buttons
-        .children(".checkBtn")
-        .click(toggleCardDoneClass)
-        .end()
-        .children(".priStarBtn")
-        .click(showPriorityMenu)
-        .end()
-        .children(".deleteBtn")
-        .click(deleteCard)
-        .end()
         // Move keyboard input caret to text box of new card
         .children(".itemText")
         .focus();
@@ -55,16 +42,15 @@ function hoverOnCheckDone() {
 }
 
 // Toggle the .done class on a .card, and toggle the checkmark icon.
-function toggleCardDoneClass() {
-    event.stopPropagation();
+function toggleCardDoneClass(event) {
     $(this).parent(".card").toggleClass("done");
     $(this).toggleClass("zmdi-check-circle").toggleClass("zmdi-check");
+    event.stopPropagation();
 }
 
 // Show the priority select dropdown menu
-function showPriorityMenu() {
+function showPriorityMenu(event) {
     // Stop body element from triggering its hidePriorityMenu function
-    event.stopPropagation();
 
     // Remove existing menu div
     $("#priDropdown").remove();
@@ -79,28 +65,31 @@ function showPriorityMenu() {
             left: (event.pageX - $(div).find(".dropMenu").innerWidth()),
             top: event.pageY
         })
-        .find(".priButton")
-        .click(setCardPriority)
+    event.stopImmediatePropagation();
+
 }
 
 
 // Remove any #priDropdown elements in the DOM
-function hidePriorityMenu() {
-    $("#priDropdown").detach();
+function hidePriorityMenu(event) {
+    //only run if event has not been stopped by lower element
+    if(!(event.isImmediatePropagationStopped())){
+        $("#priDropdown").detach();
+    }
 
 }
 
 // sets colour of card
-function setCardPriority() {
+function setCardPriority(event) {
     //fixme do this by adding a .class to element?
     //  css with flex box ordering rules based on priority
 
     // Stop priority select event from propagating up to .priStar parent
-    // and triggering showPriorityMenu
-    event.stopPropagation();
     $(this)
         .parents(".card")
         .css("background-color", $(this).css("background-color"));
+    $("#priDropdown").detach();
+    event.stopPropagation();
 }
 
 // Deletes the parent .card element of the event target
@@ -113,36 +102,25 @@ function deleteAllDone() {
     $(".card").filter(".done").remove();
 }
 
-// Set handlers for application elements present at document load.
+// Set event handlers for application elements.
+// todo: investigate performance issues related to binding event handlers this way.
+//  Using delegation is recommended, but not to elements too "far away",
+//  i.e. high up in the DOM tree from the event target.
+//  The jQuery API docs for on() (https://api.jquery.com/on/) suggest
+//  avoiding overuse of document as delegation target.
+//  Perhaps change card buttons delegate to .card, header buttons to header etc..?
+$(document)
+    .click(hidePriorityMenu)
+    .on("click", "#newMemo", newCard)
+    .on("click", "#deleteDone", deleteAllDone)
+    .on("mouseenter", ".checkBtn", hoverOnCheckDone)
+    .on("mouseleave", ".checkBtn", hoverOnCheckDone)
+    .on("click", ".checkBtn", toggleCardDoneClass)
+    .on("click", ".priStarBtn", showPriorityMenu)
+    .on("click", ".priMenuBtn", setCardPriority)
+    .on("click", ".deleteBtn", deleteCard);
+
+
 $(document).ready(function () {
-
-    //todo Can we change these to use event handling delegation?
-    // From my understanding this should let us remove all the parts of
-    // the application code where we are attaching handlers to new
-    // elements (e.g. in newCard, with all the buttons).
-    // This would greatly improve cohesion, and increase
-    // maintainability by collecting all handler assignments to one place.
-
-    // and card creation events
-    $("#newMemo").click(newCard);
-    $("#deleteDone").click(deleteAllDone);
-
-    // Mark a card as "done", striking through text
-    // and fading the card
-
-
-    // new check done handlers
-    $(".checkBtn")
-        .hover(hoverOnCheckDone)
-        .click(toggleCardDoneClass);
-
-
-    // Delete a specific card
-    $(".deleteBtn").click(deleteCard);
-
-    // Handlers for setting card priority
-    $(document).click(hidePriorityMenu);
-    $(".priStarBtn").click(showPriorityMenu);
-    // $(".priButton").click(setCardPriority);
 
 });
