@@ -156,7 +156,7 @@ main {
         color: #f24236;
     }
 
-    .priButton:hover {
+    .priMenuBtn:hover {
         filter: brightness(90%);
     }
 

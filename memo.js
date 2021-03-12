@@ -42,10 +42,10 @@ function hoverOnCheckDone() {
 }
 
 // Toggle the .done class on a .card, and toggle the checkmark icon.
-function toggleCardDoneClass() {
-    event.stopPropagation();
+function toggleCardDoneClass(event) {
     $(this).parent(".card").toggleClass("done");
     $(this).toggleClass("zmdi-check-circle").toggleClass("zmdi-check");
+    event.stopPropagation();
 }
 
 // Show the priority select dropdown menu
@@ -111,10 +111,10 @@ function deleteAllDone() {
 //  Perhaps change card buttons delegate to .card, header buttons to header etc..?
 $(document)
     .click(hidePriorityMenu)
-    // .on("click", "html", hidePriorityMenu)
     .on("click", "#newMemo", newCard)
     .on("click", "#deleteDone", deleteAllDone)
-    .on("hover", ".checkBtn", hoverOnCheckDone)
+    .on("mouseenter", ".checkBtn", hoverOnCheckDone)
+    .on("mouseleave", ".checkBtn", hoverOnCheckDone)
     .on("click", ".checkBtn", toggleCardDoneClass)
     .on("click", ".priStarBtn", showPriorityMenu)
     .on("click", ".priMenuBtn", setCardPriority)
